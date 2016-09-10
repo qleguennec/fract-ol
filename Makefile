@@ -19,10 +19,13 @@ CYAN		=	"\033[0;36m"
 WHITE		=	"\033[0;37m"
 END			=	"\033[0m"
 
+SRC += fol_ev_keys.c
 SRC += fol_exit.c
 SRC += main.c
 SRC += set_mandel.c
-SRC += fol_keys.c
+SRC += fill.c
+SRC += fol_ev_mouse.c
+SRC += fol_loop.c
 SRC += fol_init.c
 
 LIB += libvect.a
