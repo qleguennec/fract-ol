@@ -22,9 +22,9 @@ END			=	"\033[0m"
 SRC += fol_ev_keys.c
 SRC += fol_exit.c
 SRC += main.c
-SRC += set_mandel.c
 SRC += fill.c
 SRC += fol_ev_mouse.c
+SRC += cl_helper.c
 SRC += fol_loop.c
 SRC += fol_init.c
 
@@ -34,7 +34,7 @@ LIB += libft.a
 MLXDIR		=	libmlx
 MLXNAME		=	libmlx.a
 MLX			=	$(MLXDIR)/$(MLXNAME)
-MLXFLAGS	=	-framework OpenGL -framework AppKit -L$(MLXDIR)
+MLXFLAGS	=	-framework OpenGL -framework AppKit -L$(MLXDIR) -framework OpenCL
 
 OBJECTS		=	$(addprefix $(BUILDDIR)/, $(SRC:%.c=%.o))
 LIBRARIES	=	$(addprefix $(BUILDDIR)/, $(LIB)) $(MLX)

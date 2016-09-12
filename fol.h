@@ -6,21 +6,22 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/09 14:19:30 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/10 23:05:10 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/12 20:44:08 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FOL_H
 # define FOL_H
 
-# include <stdio.h>
-
-# define WIN_X		800
-# define WIN_Y		800
+# define WIN_X		600
+# define WIN_Y		600
+# define WIN_NAME	"fractol"
 # define WIN_X_2	WIN_X / 2
 # define WIN_Y_2	WIN_Y / 2
 # define JULIA		0
 # define MANDEL		1
+# define M_CL_SRC	"mandel.cl"
+# define M_CL_MAIN	"fill_blank"
 # define M_I_SCALE	1.0/256.0
 # define M_I_CX		- .6
 # define M_I_CY		0
@@ -45,6 +46,7 @@ typedef struct			s_view
 	double				cy;
 	double				scale;
 	unsigned int		exp : 1;
+	int					tex[WIN_Y * WIN_X];
 }						t_view;
 
 typedef struct			s_opts
@@ -56,7 +58,8 @@ typedef struct			s_fol
 {
 	void				*mlx;
 	void				*win;
-	t_v2i				size;
+	void				*img;
+	int					*tex;
 	t_opts				opts;
 	t_view				*view;
 }						t_fol;
@@ -76,5 +79,6 @@ int						fol_keys(int keycode, t_fol *fol);
 int						fol_ev_keys(int keycode, t_fol *fol);
 int						fol_ev_mouse(int button, int x, int y, t_view *v);
 void					fill(int hue, int sat, t_v2i lim, t_rgb *p);
+void					mlx_send_tex(int *src, int *dest);
 
 #endif

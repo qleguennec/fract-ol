@@ -6,20 +6,28 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/09 14:37:54 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/10 21:48:53 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/12 20:53:03 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fol.h"
+#include "cl_helper.h"
 #include "libmlx/mlx.h"
 #include "libft/libft.h"
+#include <stddef.h>
 
-static void		win_create(t_v2i size, char *name, t_fol *fol)
+
+static void		win_create(char *name, t_fol *fol)
 {
+	int		null;
+
 	if (!(fol->mlx = mlx_init()))
 		fol_exit("error initializing mlx ptr");
-	if (!(fol->win = mlx_new_window(fol->mlx, size.x, size.y, name)))
+	if (!(fol->win = mlx_new_window(fol->mlx, WIN_X, WIN_Y, name)))
 		fol_exit("error creating window");
+	if (!(fol->img = mlx_new_image(fol->mlx, WIN_X, WIN_Y)))
+		fol_exit("error allocating img");
+	fol->tex = (int *)mlx_get_data_addr(fol->img, &null, &null, &null);
 }
 
 static void		mlx_run(t_fol *fol)
@@ -27,6 +35,7 @@ static void		mlx_run(t_fol *fol)
 	mlx_key_hook(fol->win, &fol_ev_keys, fol);
 	mlx_mouse_hook(fol->win, &fol_ev_mouse, fol->view);
 	mlx_loop_hook(fol->mlx, &fol_loop, fol);
+	mlx_put_image_to_window(fol->mlx, fol->win, fol->img, 0, 0);
 	mlx_loop(fol->mlx);
 }
 
@@ -38,22 +47,25 @@ static void		view_init(t_view *v)
 	v->exp = 0;
 }
 
+static void		cl_init_build(t_cl_info *cl_i, t_view *v)
+{
+	cl_init(cl_i, v, sizeof(*v));
+	cl_build(cl_i, M_CL_SRC, M_CL_MAIN);
+}
+
 void			fol_init(t_opts opts)
 {
 	t_fol			fol;
 	t_view			view;
-	static t_v2i	size = {WIN_X, WIN_Y};
-	static char		*name = "fract'ol";
+	t_cl_info		cl_i;
 
 	ft_bzero(&fol, sizeof(fol));
-	fol.size = size;
 	fol.opts = opts;
+	win_create(WIN_NAME, &fol);
 	view_init(&view);
 	fol.view = &view;
-	win_create(size, name, &fol);
-	if (opts.set == MANDEL)
-		set_mandel(fol.mlx, fol.win, &view);
-	else
-		fol_exit("not implemented yet");
+	cl_init_build(&cl_i, &view);
+	cl_exec(&cl_i);
+	cl_read(&cl_i, offsetof(t_view, tex), fol.tex, sizeof(view.tex));
 	mlx_run(&fol);
 }

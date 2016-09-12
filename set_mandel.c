@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/09 15:28:11 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/10 23:12:52 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/12 17:34:05 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,13 @@
 #include "libft/libft.h"
 #include <math.h>
 #include <stdlib.h>
+#include <OpenCL/OpenCL.h>
 
-#define M_MAX_ITER 256
-
-static void		step(t_c *z, int *i)
-{
-	(*i)++;
-	z[1].y = 2 * z[1].x * z[1].y + z[0].y;
-	z[1].x = z[2].x - z[2].y + z[0].x;
-	z[2].x = z[1].x * z[1].x;
-	z[2].y = z[1].y * z[1].y;
-}
+#define M_MAX_ITER 1000
 
 static void		colorize(int *data, t_v2i lim)
 {
-	static int	sat = - 100;
+	static int	sat = 2000;
 	int			x;
 	int			y;
 
@@ -47,49 +39,20 @@ static void		colorize(int *data, t_v2i lim)
 	}
 }
 
-static void		run
-	(t_view *v, int *data, t_v2i *lim)
-{
-	int			i;
-	t_v2i		v2;
-	t_c			z[3];
-
-	v2.y = 0;
-	while (v2.y < WIN_Y)
-	{
-		v2.x = 0;
-		z[0].y = (v2.y - WIN_Y_2) * v->scale + v->cy;
-		while (v2.x < WIN_X)
-		{
-			i = 0;
-			z[0].x = (v2.x++ - WIN_X_2) * v->scale + v->cx;
-			z[1].x = hypot(z[0].x - 0.25, z[0].y);
-			if (z[0].x < z[1].x - 2 * z[1].x * z[1].x + 0.25
-				|| (z[0].x + 1) * (z[0].x + 1) + z[0].y * z[0].y < 1/16)
-				i = M_MAX_ITER;
-			ft_bzero(&z[1], sizeof(*z) * 2);
-			while (i < M_MAX_ITER && z[2].x + z[2].y < 4)
-				step(z, &i);
-			*lim = (t_v2i){MIN(lim->x, i), MAX(lim->y, i)};
-			*data++ = i;
-		}
-		v2.y++;
-	}
-}
-
 void		set_mandel
 	(void *mlx, void *win, t_view *v)
 {
 	static void		*img = NULL;
 	static int		*data = NULL;
-	static t_v2i	lim = (t_v2i){M_MAX_ITER, 0};
+	static t_v2i	lim = (t_v2i){0, M_MAX_ITER};
 	int				dummy;
 
 	if (!img)
 		img = mlx_new_image(mlx, WIN_X, WIN_Y);
 	if (!data)
 		data = (int *)mlx_get_data_addr(img, &dummy, &dummy, &dummy);
-	run(v, data, &lim);
+	render(v, data, &lim);
+	lim.y += 1;
 	colorize(data, lim);
 	mlx_put_image_to_window(mlx, win, img, 0, 0);
 }
