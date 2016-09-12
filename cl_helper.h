@@ -6,15 +6,15 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/11 18:24:58 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/12 01:04:22 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/12 22:26:31 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CL_HELPER_H
 # define CL_HELPER_H
 
-# define CL_SRC_SIZE			20480
-# define CL_LOG_SIZE			20480
+# define CL_SRC_SIZE	20480
+# define CL_LOG_SIZE	20480
 
 # include <OpenCL/opencl.h>
 

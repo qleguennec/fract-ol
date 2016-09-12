@@ -12,13 +12,32 @@
 
 #include "fol.h"
 
-kernel void			fill_blank(global t_view *v)
-{
-	int		x;
-	int		y;
+#define MAX_TER	50
 
-	x = 0;
-	y = get_local_id(0);
-	while (x < WIN_X)
-		v->tex[y * WIN_X + x++] = C_WHITE;
+kernel void			mandel(global t_view *v)
+{
+	int2		i;
+	double2		z;
+	double2		zs;
+	double2		zc;
+	int			iter;
+
+	i.x = 0;
+	i.y = get_local_id(0);
+	zc.y = (i.y - WIN_Y_2) * v->scale + v->cy;
+	while (i.x < WIN_X)
+	{
+		iter = 0;
+		z = (double2)(0, 0);
+		zs = (double2)(0, 0);
+		zc.x = (i.x - WIN_X_2) * v->scale + v->cx;
+		while (iter < MAX_TER && zs.x + zs.y < 4)
+		{
+			z.y = 2 * z.x * z.y + zc.y;
+			z.x = zs.x - zs.y + zc.x;
+			zs = z * z;
+			iter++;
+		}
+		v->tex[i.y * WIN_Y + i.x++] = iter < MAX_TER ? C_WHITE : C_BLACK;
+	}
 }

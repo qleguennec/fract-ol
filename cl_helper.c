@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/11 15:18:43 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/12 20:50:45 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/12 23:20:30 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 static char	*cl_read_source(char *filename)
 {
@@ -82,26 +83,37 @@ void		cl_build(t_cl_info *cl_i, char *filename, char *kernel_func)
 
 void		cl_exec(t_cl_info *cl_i)
 {
-	size_t		max_work_size;
-	cl_event	ev;
+	clock_t		start;
+	clock_t		end;
+	double		elapsed;
 
-	clGetDeviceInfo(cl_i->dev_id, CL_DEVICE_MAX_WORK_GROUP_SIZE
-		, sizeof(max_work_size), &max_work_size, NULL);
+	start = clock();
 	clEnqueueNDRangeKernel(cl_i->cmd_queue
 		, cl_i->kernel
 		, 1
 		, NULL
 		, (const size_t [1]){WIN_X * WIN_Y}
-		, (const size_t [1]){600}
+		, (const size_t [1]){WIN_Y}
 		, 0
 		, NULL
-		, &ev);
-	clWaitForEvents(CL_COMPLETE, &ev);
+		, NULL);
+	clFinish(cl_i->cmd_queue);
+	end = clock();
+	elapsed = (end-start)/(double)CLOCKS_PER_SEC;
+	printf("compute time: %lf\n", elapsed);
 }
 
 void		cl_read
 	(t_cl_info *cl_i, size_t offset, void *data, size_t data_size)
 {
+	clock_t		start;
+	clock_t		end;
+	double		elapsed;
+
+	start = clock();
 	clEnqueueReadBuffer(cl_i->cmd_queue, cl_i->mem, CL_TRUE
 		, offset, data_size, data, 0, NULL, NULL);
+	end = clock();
+	elapsed = (end-start)/(double)CLOCKS_PER_SEC;
+	printf("read time: %lf\n", elapsed);
 }
