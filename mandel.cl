@@ -12,7 +12,7 @@
 
 #include "fol.h"
 
-#define MAX_TER	50
+#define MAX_TER	100
 
 kernel void			mandel(global t_view *v)
 {
@@ -38,6 +38,6 @@ kernel void			mandel(global t_view *v)
 			zs = z * z;
 			iter++;
 		}
-		v->tex[i.y * WIN_Y + i.x++] = iter < MAX_TER ? C_WHITE : C_BLACK;
+		v->tex[i.y * WIN_X + i.x++] = iter < MAX_TER ? C_WHITE : C_BLACK;
 	}
 }

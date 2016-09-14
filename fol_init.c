@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/09 14:37:54 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/12 23:04:09 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/14 19:25:10 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void			fol_init(t_opts opts)
 	fol.view = &view;
 	cl_init_build(&cl_i, &view);
 	cl_exec(&cl_i);
-	cl_read(&cl_i, offsetof(t_view, tex), fol.tex, sizeof(view.tex));
+	cl_read(&cl_i, offsetof(t_view, tex), fol.tex, IMG_SIZE);
 	fol.cl_i = &cl_i;
 	mlx_run(&fol);
 }

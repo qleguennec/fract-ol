@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/11 15:18:43 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/12 23:20:30 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/14 20:05:39 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,14 +86,19 @@ void		cl_exec(t_cl_info *cl_i)
 	clock_t		start;
 	clock_t		end;
 	double		elapsed;
+	size_t		global;
+	size_t		local;
+	cl_int		ret;
 
+	global = WIN_Y;
+	local = WIN_Y;
 	start = clock();
-	clEnqueueNDRangeKernel(cl_i->cmd_queue
+	ret = clEnqueueNDRangeKernel(cl_i->cmd_queue
 		, cl_i->kernel
 		, 1
 		, NULL
-		, (const size_t [1]){WIN_X * WIN_Y}
-		, (const size_t [1]){WIN_Y}
+		, &global
+		, &local
 		, 0
 		, NULL
 		, NULL);
