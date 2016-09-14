@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/11 15:18:43 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/14 20:05:39 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/14 21:06:26 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,9 @@ void		cl_build(t_cl_info *cl_i, char *filename, char *kernel_func)
 	cl_i->prog = clCreateProgramWithSource(cl_i->ctxt, 1
 		, (const char **)&prgsrc, NULL, NULL);
 	err = clBuildProgram(cl_i->prog, cl_i->dev_num
-		, &cl_i->dev_id, "-I.", NULL, NULL);
+		, &cl_i->dev_id,
+		"-I. -cl-unsafe-math-optimizations -cl-fast-relaxed-math -cl-finite-math-only"
+		, NULL, NULL);
 	if (err < 0)
 	{
 		clGetProgramBuildInfo(cl_i->prog, cl_i->dev_id, CL_PROGRAM_BUILD_LOG

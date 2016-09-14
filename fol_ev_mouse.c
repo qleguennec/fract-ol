@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/10 16:25:46 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/14 19:57:29 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/14 20:56:42 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 int			fol_ev_mouse(int button, int x, int y, t_view *v)
 {
-	static double	scale_treshold = 1e-64;
+	static double	scale_treshold = 1e-256;
 
 	if (!(button == 1 || button == 2))
 		return (0);

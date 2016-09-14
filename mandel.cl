@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mandel.c                                           :+:      :+:    :+:   */
+/*   mandel.cl                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,24 @@
 
 #include "fol.h"
 
-#define MAX_TER	100
+#define MAX_ITER	100
+
+static void			color(global int *px, int iter)
+{
+	double		c;
+
+	if (iter == MAX_ITER)
+		*px = C_BLACK;
+	else
+	{
+		if ((c = 3 * log((double)iter) / log(MAX_ITER - 1.0)) < 1)
+			*px = 255 * (c - 1);
+		else if (c < 2)
+			*px = 255 * c;
+		else
+			*px = 255 * (c + 1);
+	}
+}
 
 kernel void			mandel(global t_view *v)
 {
@@ -31,13 +48,13 @@ kernel void			mandel(global t_view *v)
 		z = (double2)(0, 0);
 		zs = (double2)(0, 0);
 		zc.x = (i.x - WIN_X_2) * v->scale + v->cx;
-		while (iter < MAX_TER && zs.x + zs.y < 4)
+		while (iter < MAX_ITER && zs.x + zs.y < 4)
 		{
 			z.y = 2 * z.x * z.y + zc.y;
 			z.x = zs.x - zs.y + zc.x;
 			zs = z * z;
 			iter++;
 		}
-		v->tex[i.y * WIN_X + i.x++] = iter < MAX_TER ? C_WHITE : C_BLACK;
+		color(v->tex + (i.y * WIN_X + i.x++), iter);
 	}
 }

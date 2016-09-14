@@ -6,15 +6,15 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/09 14:19:30 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/14 20:06:57 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/14 21:13:38 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FOL_H
 # define FOL_H
 
-# define WIN_X		1024
-# define WIN_Y		768
+# define WIN_X		800
+# define WIN_Y		800
 # define WIN_NAME	"fractol"
 # define WIN_X_2	WIN_X / 2
 # define WIN_Y_2	WIN_Y / 2
