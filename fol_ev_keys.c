@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/09 16:06:29 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/14 20:49:33 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/15 15:45:21 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,12 @@ int			fol_ev_keys(int keycode, t_fol *fol)
 	}
 	if (keycode == 15)
 	{
-		fol->view->scale = M_I_SCALE;
-		fol->view->cx = M_I_CX;
-		fol->view->cy = M_I_CY;
+		fol->view->scale.x = M_I_SCALE;
+		fol->view->scale.y = M_I_SCALE;
+		fol->view->cx.x = M_I_CX;
+		fol->view->cx.y = M_I_CX;
+		fol->view->cy.x = M_I_CY;
+		fol->view->cy.y = M_I_CY;
 		fol->view->exp = 1;
 	}
 	return (0);

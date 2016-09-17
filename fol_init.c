@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/09 14:37:54 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/14 19:25:10 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/15 16:42:15 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static void		win_create(char *name, t_fol *fol)
 	if (!(fol->img = mlx_new_image(fol->mlx, WIN_X, WIN_Y)))
 		fol_exit("error allocating img");
 	fol->tex = (int *)mlx_get_data_addr(fol->img, &null, &null, &null);
+	ft_bzero(fol->tex, IMG_SIZE);
 }
 
 static void		mlx_run(t_fol *fol)
@@ -41,16 +42,13 @@ static void		mlx_run(t_fol *fol)
 
 static void		view_init(t_view *v)
 {
-	v->scale = M_I_SCALE;
-	v->cx = M_I_CX;
-	v->cy = M_I_CY;
+	v->scale.x = M_I_SCALE;
+	v->scale.y = M_I_SCALE;
+	v->cx.x = M_I_CX;
+	v->cx.y = M_I_CX;
+	v->cy.x = M_I_CY;
+	v->cy.y = M_I_CY;
 	v->exp = 0;
-}
-
-static void		cl_init_build(t_cl_info *cl_i, t_view *v)
-{
-	cl_init(cl_i, v, sizeof(*v));
-	cl_build(cl_i, M_CL_SRC, M_CL_MAIN);
 }
 
 void			fol_init(t_opts opts)
@@ -61,10 +59,12 @@ void			fol_init(t_opts opts)
 
 	ft_bzero(&fol, sizeof(fol));
 	fol.opts = opts;
-	win_create(WIN_NAME, &fol);
 	view_init(&view);
 	fol.view = &view;
-	cl_init_build(&cl_i, &view);
+	cl_init(&cl_i, &view, sizeof(view));
+	if (opts.set == MANDEL)
+		cl_build_mandel(&cl_i);
+	win_create(WIN_NAME, &fol);
 	cl_exec(&cl_i);
 	cl_read(&cl_i, offsetof(t_view, tex), fol.tex, IMG_SIZE);
 	fol.cl_i = &cl_i;

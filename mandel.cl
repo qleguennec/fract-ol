@@ -10,51 +10,90 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fol.h"
+#include "cl_constants.h"
+#define MAX_ITER 250
 
-#define MAX_ITER	100
+constant double2 v4 = {4.0, 4.0};
+constant double2 win_x = {WIN_X_2, WIN_X_2};
+constant double2 win_y = {WIN_Y_2, WIN_Y_2};
 
-static void			color(global int *px, int iter)
+void				color(global unsigned char *out, int i)
 {
 	double		c;
 
-	if (iter == MAX_ITER)
-		*px = C_BLACK;
+	c = log((double)i) / log((double)MAX_ITER);
+	if (c < 1)
+	{
+		out[0] = 0;
+		out[1] = 0;
+		out[2] = 255 * c;
+		out[3] = 0;
+	}
+	else if ( c < 2 )
+	{
+		out[0] = 0;
+		out[1] = 0;
+		out[2] = 255 * (c - 1);
+		out[3] = 255;
+	}
 	else
 	{
-		if ((c = 3 * log((double)iter) / log(MAX_ITER - 1.0)) < 1)
-			*px = 255 * (c - 1);
-		else if (c < 2)
-			*px = 255 * c;
-		else
-			*px = 255 * (c + 1);
+		out[0] = 0;
+		out[1] = 0;
+		out[2] = 255 * (c - 2);
+		out[3] = 255;
 	}
 }
 
 kernel void			mandel(global t_view *v)
 {
-	int2		i;
-	double2		z;
-	double2		zs;
-	double2		zc;
-	int			iter;
+	double2		vr;
+	double2		vi;
+	double2		zr;
+	double2		zi;
+	double2		tr;
+	double2		ti;
+	double2		zz;
+	long2		delta;
+	global int	*out;
+	int			x;
+	int			y;
+	int			i;
+	int			j;
 
-	i.x = 0;
-	i.y = get_local_id(0);
-	zc.y = (i.y - WIN_Y_2) * v->scale + v->cy;
-	while (i.x < WIN_X)
+	x = 0;
+	y = get_local_id(0);
+	vi = (double2){y, y};
+	vi = (vi - win_y) * v->scale + v->cy;
+	out = v->tex + y * WIN_X;
+	while (x < WIN_X)
 	{
-		iter = 0;
-		z = (double2)(0, 0);
-		zs = (double2)(0, 0);
-		zc.x = (i.x - WIN_X_2) * v->scale + v->cx;
-		while (iter < MAX_ITER && zs.x + zs.y < 4)
+		vr = (double2){x, x + 1};
+		vr = (vr - win_x) * v->scale + v->cx;
+		zr = vr;
+		zi = vi;
+		tr = vr * vr;
+		ti = vi * vi;
+		i = 1;
+		j = 1;
+		delta = (long2){1, 1};
+		while ((delta.x && i < MAX_ITER && ++i)
+			|| (delta.y && j < MAX_ITER && ++j))
 		{
-			z.y = 2 * z.x * z.y + zc.y;
-			z.x = zs.x - zs.y + zc.x;
-			zs = z * z;
-			iter++;
+			zz = zr * zi;
+			zr = tr - ti + vr;
+			zi = zz + zz + vi;
+			tr = zr * zr;
+			ti = zi * zi;
+			delta = islessequal(tr + ti, v4);
 		}
-		color(v->tex + (i.y * WIN_X + i.x++), iter);
+		if (i == MAX_ITER)
+			out[x++] = C_BLACK;
+		else
+			color(out + x++, i);
+		if (j == MAX_ITER)
+			out[x++] = C_BLACK;
+		else
+			color(out + x++, j);
 	}
 }

@@ -6,7 +6,7 @@ NAME		=	$(BINDIR)/fractol
 
 # Compiler options
 CC			=	clang
-CFLAGS		=	$(addprefix -I,$(INCLUDE)) -Wall -Wextra -Werror -g
+CFLAGS		=	$(addprefix -I,$(INCLUDE)) -Wall -Wextra -Werror -g -O3
 
 # Color output
 BLACK		=	"\033[0;30m"
@@ -22,13 +22,16 @@ END			=	"\033[0m"
 SRC += fol_ev_keys.c
 SRC += fol_exit.c
 SRC += main.c
-#SRC += fill.c
+SRC += cl_read_prgsrc.c
 SRC += fol_ev_mouse.c
 SRC += cl_helper.c
+SRC += cl_build_mandel.c
 SRC += fol_loop.c
 SRC += fol_init.c
 
 LIB += libvect.a
+LIB += libprintf.a
+LIB += libgnl.a
 LIB += libft.a
 
 MLXDIR		=	libmlx
@@ -66,10 +69,11 @@ $(NAME): $(OBJECTS) $(LIBRARIES)
 
 clean:
 	@printf $(BLUE)$(PROJECT)$(END)'\t'
-	rm -rf $(BUILDDIR)
+	rm -rf $(OBJECTS)
 
 fclean: clean
 	@printf $(BLUE)$(PROJECT)$(END)'\t'
+	rm -rf $(BUILDDIR)
 	rm -rf $(NAME)
 
 re: fclean all

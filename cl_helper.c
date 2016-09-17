@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/11 15:18:43 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/14 21:06:26 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/15 15:01:56 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,30 +17,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-
-static char	*cl_read_source(char *filename)
-{
-	char	buf[CL_SRC_SIZE];
-	char	*err;
-	int		fd;
-
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-	{
-		err = strerror(fd);
-		write(1, err, ft_strlen(err));
-		exit(fd);
-	}
-	ft_bzero(buf, CL_SRC_SIZE);
-	fd = read(fd, buf, CL_SRC_SIZE);
-	if (fd < 0)
-	{
-		err = strerror(fd);
-		write(1, err, ft_strlen(err));
-		exit(fd);
-	}
-	return (ft_strdup(buf));
-}
 
 void		cl_init(t_cl_info *cl_i, void *data, size_t data_size)
 {
@@ -53,24 +29,23 @@ void		cl_init(t_cl_info *cl_i, void *data, size_t data_size)
 		, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, data_size, data, NULL);
 }
 
-void		cl_build(t_cl_info *cl_i, char *filename, char *kernel_func)
+void		cl_build
+	(t_cl_info *cl_i, char *prgsrc, char *kernel_func, char *build_options)
 {
 	char	log[CL_LOG_SIZE];
-	char	malloc_err[] = "unable to allocate memory for program source";
-	char	*prgsrc;
+	char	err_msg[] = "unable to read program source";
 	int		err;
 
-	prgsrc = cl_read_source(filename);
 	if (!prgsrc)
 	{
-		write(1, malloc_err, ft_strlen(malloc_err));
+		write(1, err_msg, sizeof(err_msg));
 		exit(1);
 	}
 	cl_i->prog = clCreateProgramWithSource(cl_i->ctxt, 1
 		, (const char **)&prgsrc, NULL, NULL);
 	err = clBuildProgram(cl_i->prog, cl_i->dev_num
-		, &cl_i->dev_id,
-		"-I. -cl-unsafe-math-optimizations -cl-fast-relaxed-math -cl-finite-math-only"
+		, &cl_i->dev_id
+		, build_options
 		, NULL, NULL);
 	if (err < 0)
 	{

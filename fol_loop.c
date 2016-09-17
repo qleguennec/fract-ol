@@ -6,13 +6,14 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/10 17:24:32 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/14 20:49:18 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/16 16:24:39 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fol.h"
 #include "cl_helper.h"
 #include "libmlx/mlx.h"
+#include "libft/libft.h"
 #include <stddef.h>
 #include <time.h>
 #include <stdio.h>
@@ -38,7 +39,7 @@ static int		update_cl_buffer(t_fol *fol, t_cl_info *cl_i)
 {
 	size_t		write_size;
 
-	write_size = offsetof(t_view, scale) + sizeof(double);
+	write_size = offsetof(t_view, scale) + sizeof(cl_double2);
 	clEnqueueWriteBuffer(cl_i->cmd_queue
 		, cl_i->mem
 		, CL_TRUE
