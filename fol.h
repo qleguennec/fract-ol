@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/09 14:19:30 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/18 18:13:28 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/18 18:56:49 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # define IMG_LEN	WIN_X * WIN_Y
 # define IMG_SIZE	IMG_LEN * 4
 # define SF			2.0
+# define DI			25
 # define MANDEL		0
 # define JULIA		1
 # define M_CL_SRC	"mandel.cl"
@@ -36,6 +37,7 @@
 
 typedef struct				s_view
 {
+	unsigned int			iter_max;
 	cl_double2				ix;
 	cl_double2				iy;
 	cl_double2				cx;

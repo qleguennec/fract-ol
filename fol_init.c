@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/09 14:37:54 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/18 18:18:35 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/18 18:28:47 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,14 @@ static void		mlx_run(t_fol *fol)
 
 void			view_init(t_view *v, int set)
 {
-	static const double		scale[2] = {1.0/256, 1.0/256};
+	static const int		iter_max[2] = {100, 100};
 	static const double		ix[2] = {0, .285};
 	static const double		iy[2] = {0, -.3};
-	static const double		cx[2] = {-.9, 0};
+	static const double		cx[2] = {-.7, 0};
 	static const double		cy[2] = {0, 0};
+	static const double		scale[2] = {1.0/256, 1.0/256};
 
+	v->iter_max = iter_max[set];
 	v->scale.x = scale[set];
 	v->scale.y = v->scale.x;
 	v->ix.x = ix[set];

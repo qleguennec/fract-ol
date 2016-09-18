@@ -12,12 +12,12 @@
 
 #include "cl_constants.h"
 
-static unsigned int		color(int i)
+static unsigned int		color(int i, unsigned int iter_max)
 {
 	double			c;
 	unsigned char	out[4];
 
-	c = log((double)i) / log((double)MAX_ITER);
+	c = log((double)i) / log((double)iter_max);
 	((int *)out)[0] = 0;
 	if (c < 1)
 		out[2] = 255 * c;
@@ -65,9 +65,9 @@ kernel void				julia(global t_view *v)
 		z[5] = z[3] * z[3];
 		i = 1;
 		delta = (long2){1, 1};
-		while ((delta.x || delta.y) && ++i < MAX_ITER)
+		while ((delta.x || delta.y) && ++i < v->iter_max)
 			julia_step(z, &delta, v->ix, v->iy);
-		out[a.x++] = delta.x ? C_BLACK : color(i);
-		out[a.x++] = delta.y ? C_BLACK : color(i);
+		out[a.x++] = delta.x ? C_BLACK : color(i, v->iter_max);
+		out[a.x++] = delta.y ? C_BLACK : color(i, v->iter_max);
 	}
 }

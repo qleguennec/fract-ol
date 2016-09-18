@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/10 17:24:32 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/18 18:05:52 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/18 18:54:54 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,19 @@
 #include "cl_helper.h"
 #include "libmlx/mlx.h"
 #include "libft/libft.h"
+#include "libprintf/libprintf.h"
 #include <stddef.h>
 #include <time.h>
 #include <stdio.h>
+
+static int		win_log(t_fol *fol)
+{
+	char		buf[20];
+
+	ft_sprintf(buf, "max iteration: %d", fol->view->iter_max);
+	mlx_string_put(fol->mlx, fol->win, 10, 0, C_WHITE, buf);
+	return (1);
+}
 
 static int		redraw(t_fol *fol)
 {
@@ -24,7 +34,7 @@ static int		redraw(t_fol *fol)
 	cl_exec(fol->cl_i);
 	cl_read(fol->cl_i, offsetof(t_view, tex), fol->tex, IMG_SIZE);
 	mlx_put_image_to_window(fol->mlx, fol->win, fol->img, 0, 0);
-	return (1);
+	return (win_log(fol));
 }
 
 static int		update_cl_buffer(t_fol *fol, t_cl_info *cl_i)
