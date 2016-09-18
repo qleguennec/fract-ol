@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mandel.cl                                          :+:      :+:    :+:   */
+/*   julia.cl                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -34,18 +34,18 @@ static unsigned int		color(int i)
 	return (((unsigned int *)out)[0]);
 }
 
-static void				mandel_step
+static void				julia_step
 	(double2 *z, long2 *delta, double2 ix, double2 iy)
 {
 	z[6] = z[2] * z[3];
-	z[2] = z[4] - z[5] + z[0];
-	z[3] = z[6] + z[6] + z[1];
+	z[2] = z[4] - z[5] + ix;
+	z[3] = z[6] + z[6] + iy;
 	z[4] = z[2] * z[2];
 	z[5] = z[3] * z[3];
 	*delta = islessequal(z[4] + z[5], V4);
 }
 
-kernel void				mandel(global t_view *v)
+kernel void				julia(global t_view *v)
 {
 	double2		z[7];
 	long2		delta;
@@ -66,7 +66,7 @@ kernel void				mandel(global t_view *v)
 		i = 1;
 		delta = (long2){1, 1};
 		while ((delta.x || delta.y) && ++i < MAX_ITER)
-			mandel_step(z, &delta, v->ix, v->iy);
+			julia_step(z, &delta, v->ix, v->iy);
 		out[a.x++] = delta.x ? C_BLACK : color(i);
 		out[a.x++] = delta.y ? C_BLACK : color(i);
 	}

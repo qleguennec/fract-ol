@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cl_build_mandel.c                                  :+:      :+:    :+:   */
+/*   cl_build_julia.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/15 14:51:53 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/17 15:18:09 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/18 15:50:52 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,14 @@ static void		set_build_opts(t_vect *v)
 	vect_mset_end(v, '\0', 1);
 }
 
-void			cl_build_mandel(t_cl_info *cl_i)
+void			cl_build_julia(t_cl_info *cl_i)
 {
 	t_vect	vect;
 	char	*prgsrc;
 
 	ft_bzero(&vect, sizeof(vect));
-	prgsrc = cl_read_prgsrc(M_CL_SRC, &vect);
+	prgsrc = cl_read_prgsrc(J_CL_SRC, &vect);
 	vect.used = 0;
 	set_build_opts(&vect);
-	cl_build(cl_i, prgsrc, M_CL_MAIN, vect.data);
+	cl_build(cl_i, prgsrc, J_CL_MAIN, vect.data);
 }

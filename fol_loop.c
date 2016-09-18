@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/10 17:24:32 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/16 16:24:39 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/18 18:05:52 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,10 @@
 
 static int		redraw(t_fol *fol)
 {
-	clock_t		start;
-	clock_t		end;
-	double		elapsed;
-
 	mlx_clear_window(fol->mlx, fol->win);
 	cl_exec(fol->cl_i);
 	cl_read(fol->cl_i, offsetof(t_view, tex), fol->tex, IMG_SIZE);
-	start = clock();
 	mlx_put_image_to_window(fol->mlx, fol->win, fol->img, 0, 0);
-	end = clock();
-	elapsed = (end-start)/(double)CLOCKS_PER_SEC;
-	printf("draw time: %lf\n", elapsed);
 	return (1);
 }
 

@@ -19,15 +19,17 @@ CYAN		=	"\033[0;36m"
 WHITE		=	"\033[0;37m"
 END			=	"\033[0m"
 
-SRC += fol_ev_keys.c
-SRC += fol_exit.c
-SRC += main.c
-SRC += cl_read_prgsrc.c
-SRC += fol_ev_mouse.c
-SRC += cl_helper.c
+SRC += cl_build_julia.c
 SRC += cl_build_mandel.c
-SRC += fol_loop.c
+SRC += cl_helper.c
+SRC += cl_read_prgsrc.c
+SRC += fol_ev_keys.c
+SRC += fol_ev_motion.c
+SRC += fol_ev_mouse.c
+SRC += fol_exit.c
 SRC += fol_init.c
+SRC += fol_loop.c
+SRC += main.c
 
 LIB += libvect.a
 LIB += libprintf.a

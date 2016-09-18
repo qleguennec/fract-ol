@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/11 15:18:43 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/15 15:01:56 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/17 16:08:01 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,14 @@ void		cl_build
 	}
 	cl_i->prog = clCreateProgramWithSource(cl_i->ctxt, 1
 		, (const char **)&prgsrc, NULL, NULL);
-	err = clBuildProgram(cl_i->prog, cl_i->dev_num
-		, &cl_i->dev_id
-		, build_options
-		, NULL, NULL);
+	err = clBuildProgram(cl_i->prog, cl_i->dev_num, &cl_i->dev_id
+		, build_options, NULL, NULL);
 	if (err < 0)
 	{
 		clGetProgramBuildInfo(cl_i->prog, cl_i->dev_id, CL_PROGRAM_BUILD_LOG
 			, CL_LOG_SIZE, log, NULL);
 		write(1, log, ft_strlen(log));
-		exit(1);
+		exit(err);
 	}
 	cl_i->kernel = clCreateKernel(cl_i->prog, kernel_func, &err);
 	clSetKernelArg(cl_i->kernel, 0, sizeof(cl_mem), &cl_i->mem);
@@ -60,17 +58,12 @@ void		cl_build
 
 void		cl_exec(t_cl_info *cl_i)
 {
-	clock_t		start;
-	clock_t		end;
-	double		elapsed;
 	size_t		global;
 	size_t		local;
-	cl_int		ret;
 
 	global = WIN_Y;
 	local = WIN_Y;
-	start = clock();
-	ret = clEnqueueNDRangeKernel(cl_i->cmd_queue
+	clEnqueueNDRangeKernel(cl_i->cmd_queue
 		, cl_i->kernel
 		, 1
 		, NULL
@@ -79,23 +72,11 @@ void		cl_exec(t_cl_info *cl_i)
 		, 0
 		, NULL
 		, NULL);
-	clFinish(cl_i->cmd_queue);
-	end = clock();
-	elapsed = (end-start)/(double)CLOCKS_PER_SEC;
-	printf("compute time: %lf\n", elapsed);
 }
 
 void		cl_read
 	(t_cl_info *cl_i, size_t offset, void *data, size_t data_size)
 {
-	clock_t		start;
-	clock_t		end;
-	double		elapsed;
-
-	start = clock();
 	clEnqueueReadBuffer(cl_i->cmd_queue, cl_i->mem, CL_TRUE
 		, offset, data_size, data, 0, NULL, NULL);
-	end = clock();
-	elapsed = (end-start)/(double)CLOCKS_PER_SEC;
-	printf("read time: %lf\n", elapsed);
 }

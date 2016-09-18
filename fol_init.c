@@ -6,7 +6,7 @@
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/09 14:37:54 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/15 16:42:15 by qle-guen         ###   ########.fr       */
+/*   Updated: 2016/09/18 18:18:35 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "cl_helper.h"
 #include "libmlx/mlx.h"
 #include "libft/libft.h"
+#include "X.h"
 #include <stddef.h>
 
 
@@ -34,20 +35,31 @@ static void		win_create(char *name, t_fol *fol)
 static void		mlx_run(t_fol *fol)
 {
 	mlx_key_hook(fol->win, &fol_ev_keys, fol);
-	mlx_mouse_hook(fol->win, &fol_ev_mouse, fol->view);
+	mlx_mouse_hook(fol->win, &fol_ev_mouse, fol);
 	mlx_loop_hook(fol->mlx, &fol_loop, fol);
+	mlx_hook(fol->win, MotionNotify, PointerMotionMask, &fol_ev_motion, fol);
 	mlx_put_image_to_window(fol->mlx, fol->win, fol->img, 0, 0);
 	mlx_loop(fol->mlx);
 }
 
-static void		view_init(t_view *v)
+void			view_init(t_view *v, int set)
 {
-	v->scale.x = M_I_SCALE;
-	v->scale.y = M_I_SCALE;
-	v->cx.x = M_I_CX;
-	v->cx.y = M_I_CX;
-	v->cy.x = M_I_CY;
-	v->cy.y = M_I_CY;
+	static const double		scale[2] = {1.0/256, 1.0/256};
+	static const double		ix[2] = {0, .285};
+	static const double		iy[2] = {0, -.3};
+	static const double		cx[2] = {-.9, 0};
+	static const double		cy[2] = {0, 0};
+
+	v->scale.x = scale[set];
+	v->scale.y = v->scale.x;
+	v->ix.x = ix[set];
+	v->ix.y = v->ix.x;
+	v->iy.x = iy[set];
+	v->iy.y = v->iy.x;
+	v->cx.x = cx[set];
+	v->cx.y = v->cx.x;
+	v->cy.x = cy[set];
+	v->cy.y = v->cy.x;
 	v->exp = 0;
 }
 
@@ -59,11 +71,13 @@ void			fol_init(t_opts opts)
 
 	ft_bzero(&fol, sizeof(fol));
 	fol.opts = opts;
-	view_init(&view);
+	view_init(&view, opts.set);
 	fol.view = &view;
 	cl_init(&cl_i, &view, sizeof(view));
 	if (opts.set == MANDEL)
 		cl_build_mandel(&cl_i);
+	else if (opts.set == JULIA)
+		cl_build_julia(&cl_i);
 	win_create(WIN_NAME, &fol);
 	cl_exec(&cl_i);
 	cl_read(&cl_i, offsetof(t_view, tex), fol.tex, IMG_SIZE);

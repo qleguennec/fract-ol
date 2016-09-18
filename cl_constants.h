@@ -1,30 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fol_ev_keys.c                                      :+:      :+:    :+:   */
+/*   cl_constants.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qle-guen <qle-guen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/09/09 16:06:29 by qle-guen          #+#    #+#             */
-/*   Updated: 2016/09/18 15:58:06 by qle-guen         ###   ########.fr       */
+/*   Created: 2016/09/15 15:30:35 by qle-guen          #+#    #+#             */
+/*   Updated: 2016/09/18 18:09:25 by qle-guen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fol.h"
-#include "libmlx/mlx.h"
-#include <stdlib.h>
+#ifndef CL_CONSTANTS_H
+# define CL_CONSTANTS_H
 
-int			fol_ev_keys(int keycode, t_fol *fol)
+# define MAX_ITER			500
+# define V4					(double2){4.0, 4.0}
+# define V_WIN_X_2			(double2){WIN_X_2, WIN_X_2}
+# define V_WIN_Y_2			(double2){WIN_Y_2, WIN_Y_2}
+
+typedef struct				s_view
 {
-	if (keycode == 53)
-	{
-		mlx_destroy_window(fol->mlx, fol->win);
-		exit(0);
-	}
-	if (keycode == 15)
-	{
-		view_init(fol->view, fol->opts.set);
-		fol->view->exp = 1;
-	}
-	return (0);
-}
+	double2					ix;
+	double2					iy;
+	double2					cx;
+	double2					cy;
+	double2					scale;
+	unsigned int			exp : 1;
+	int						tex[IMG_LEN];
+}							t_view;
+
+#endif
